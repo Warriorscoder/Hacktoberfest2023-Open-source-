@@ -1,0 +1,92 @@
+#include <iostream>
+#include <unordered_map>
+#include <list>
+#include <queue>
+#include <vector>
+using namespace std;
+
+// BFS -> Breadth First Search
+
+class graphs
+{
+public:
+    unordered_map<int, list<int>> mp;
+
+    void AdjList(int a, int b, bool direction) // this will create adjacency list
+    {
+        mp[a].push_back(b);
+
+        if (direction == 1)
+        {
+            mp[b].push_back(a);
+        }
+    }
+
+    void print()
+    {
+        for (auto i : mp)
+        {
+            cout << i.first << " -> ";
+            for (auto j : i.second)
+            {
+                cout << j << " ";
+            }
+            cout << endl;
+        }
+    }
+    void bsf(unordered_map<int, list<int>> mp, unordered_map<int, bool> &verify, int i)
+    {
+        queue<int> q;
+        q.push(i);
+        verify[i] = 1;
+
+        while (!q.empty())
+        {
+            int front_node = q.front();
+            q.pop();
+
+            cout << front_node << " ";
+
+            for (auto i : mp[front_node])
+            {
+                if (!verify[i])
+                {
+                    q.push(i);
+                    verify[i] = 1;
+                }
+            }
+        }
+    }
+    void BST_traversal(int node)
+    {
+        unordered_map<int, bool> verify;
+
+        for (int i = 1; i <= node; i++)
+        {
+            if (!verify[i])
+            {
+                bsf(mp, verify, i);
+            }
+        }
+    }
+};
+
+int main()
+{
+    graphs one;
+    int node, edges;
+    cin >> node >> edges;
+
+    for (int i = 0; i < edges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        one.AdjList(u, v, 0);
+    }
+
+    one.print();
+
+    one.BST_traversal(node);
+    cout << endl;
+}
